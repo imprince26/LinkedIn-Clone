@@ -33,23 +33,11 @@ app.get("/",(req,res)=>{
   })
 })
 
-app.use("/api/v1/auth", authRoutes);
-app.use("/api/v1/users", userRoutes);
-app.use("/api/v1/posts", postRoutes);
-app.use("/api/v1/notifications", notificationRoutes);
-app.use("/api/v1/connections", connectionRoutes);
-
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "/client/dist")));
-
-  app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "client", "dist", "index.html"));
-  });
-}else {
-  app.get("/", (req, res) => {
-    res.send("API is running...");
-  });
-}
+app.use("/auth", authRoutes);
+app.use("/users", userRoutes);
+app.use("/posts", postRoutes);
+app.use("/notifications", notificationRoutes);
+app.use("/connections", connectionRoutes);
 
 app.listen(Port, () => {
   console.log(`Server is running on port ${Port}`);

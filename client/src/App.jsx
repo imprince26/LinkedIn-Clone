@@ -1,6 +1,5 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import Layout from "./components/layout/Layout";
-
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/auth/LoginPage";
 import SignUpPage from "./pages/auth/SignUpPage";
@@ -13,18 +12,34 @@ import PostPage from "./pages/PostPage";
 import ProfilePage from "./pages/ProfilePage";
 
 function App() {
+  const navigate = useNavigate();
+
   const { data: authUser, isLoading } = useQuery({
-    queryKey: ["authUser"],
+    queryKey: ["authUser "],
     queryFn: async () => {
       try {
-        const res = await axiosInstance.get("/auth/me");
+        const token = localStorage.getItem("token");
+        if (!token) return null;
+
+        const res = await axiosInstance.get("/auth/me", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         return res.data;
       } catch (err) {
         if (err.response && err.response.status === 401) {
-          console.log("User is not authenticated");
+          localStorage.removeItem("token"); // Clear invalid token
+          toast.error("Session expired. Please log in again.", {
+            style: {
+              background: "#333",
+              color: "#fff",
+            },
+          });
+          navigate("/login"); // Navigate to login page
           return null;
         }
-        toast.error(err.response.data.message || "Something went wrong", {
+        toast.error(err.response?.data?.message || "Something went wrong", {
           style: {
             background: "#333",
             color: "#fff",
@@ -49,7 +64,7 @@ function App() {
         />
         <Route
           path="/login"
-          element={<LoginPage />}
+          element={!authUser ? <LoginPage /> : <Navigate to={"/"} />}
         />
         <Route
           path="/notifications"
@@ -69,6 +84,10 @@ function App() {
           path="/profile/:username"
           element={authUser ? <ProfilePage /> : <Navigate to={"/login"} />}
         />
+      <Route
+        path="*"
+        element={<Navigate to="/" />} // Redirect to home or a 404 page
+      />
       </Routes>
       <Toaster />
     </Layout>
