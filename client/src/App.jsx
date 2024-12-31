@@ -24,12 +24,12 @@ function App() {
           console.log("User is not authenticated");
           return null;
         }
-        toast.error(err.response.data.message || "Something went wrong",{
-			style : {
-			  background : "#333",
-			  color : "#fff",
-			}
-		  });
+        toast.error(err.response.data.message || "Something went wrong", {
+          style: {
+            background: "#333",
+            color: "#fff",
+          },
+        });
       }
     },
   });
