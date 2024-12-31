@@ -21,6 +21,7 @@ function App() {
         return res.data;
       } catch (err) {
         if (err.response && err.response.status === 401) {
+          console.log("User is not authenticated");
           return null;
         }
         toast.error(err.response.data.message || "Something went wrong",{
