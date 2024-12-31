@@ -14,7 +14,7 @@ const SignUpForm = () => {
 
   const { mutate: signUpMutation, isLoading } = useMutation({
     mutationFn: async (data) => {
-      const res = await axiosInstance.post("/auth/signup", data);
+      const res = await axiosInstance.post("/signup", data);
       return res.data;
     },
     onSuccess: () => {

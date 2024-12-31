@@ -21,7 +21,7 @@ function App() {
         const token = localStorage.getItem("token");
         if (!token) return null;
 
-        const res = await axiosInstance.get("/auth/me", {
+        const res = await axiosInstance.get("/me", {
           headers: {
             Authorization: `Bearer ${token}`,
           },

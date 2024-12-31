@@ -33,7 +33,7 @@ app.get("/",(req,res)=>{
   })
 })
 
-app.use("/auth", authRoutes);
+app.use("/", authRoutes);
 app.use("/users", userRoutes);
 app.use("/posts", postRoutes);
 app.use("/notifications", notificationRoutes);
