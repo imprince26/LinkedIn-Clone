@@ -2,8 +2,7 @@ import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { sendWelcomeEmail } from "../emails/emailHandlers.js";
-// import sendEmail from "../lib/sendEmail.js";
-// import { createWelcomeEmailTemplate } from "../emails/emailTemplate.js";
+
 export const signup = async (req, res) => {
   try {
     const { name, username, email, password } = req.body;
@@ -46,8 +45,7 @@ export const signup = async (req, res) => {
     res.cookie("jwt-linkedin", token, {
       httpOnly: true,
       maxAge: 3 * 24 * 60 * 60 * 1000,
-      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax", 
-      secure: process.env.NODE_ENV === "production",  
+      sameSite:"strict",   
     });
 
     res.status(201).json({ message: "User registered successfully" });
@@ -56,10 +54,6 @@ export const signup = async (req, res) => {
 
     try {
       await sendWelcomeEmail(user.email, user.name, profileUrl);
-      // await sendEmail({   sendTo : email,
-      //   subject : "Welcome to LinkedIn-Clone",
-      //   html : createWelcomeEmailTemplate(name, profileUrl)
-      // })
     } catch (emailError) {
       console.error("Error sending welcome Email", emailError);
     }
@@ -110,7 +104,7 @@ export const logout = (req, res) => {
 
 export const getCurrentUser = async (req, res) => {
   try {
-    res.json(req.user);
+    const resp = await res.json(req.user);
   } catch (error) {
     console.error("Error in getCurrentUser controller:", error);
     res.status(500).json({ message: "Server error" });
