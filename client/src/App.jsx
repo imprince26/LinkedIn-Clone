@@ -12,42 +12,21 @@ import PostPage from "./pages/PostPage";
 import ProfilePage from "./pages/ProfilePage";
 
 function App() {
-  const navigate = useNavigate();
 
   const { data: authUser, isLoading } = useQuery({
-    queryKey: ["authUser "],
-    queryFn: async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) return null;
-
-        const res = await axiosInstance.get("/me", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        return res.data;
-      } catch (err) {
-        if (err.response && err.response.status === 401) {
-          localStorage.removeItem("token"); // Clear invalid token
-          toast.error("Session expired. Please log in again.", {
-            style: {
-              background: "#333",
-              color: "#fff",
-            },
-          });
-          navigate("/login"); // Navigate to login page
-          return null;
-        }
-        toast.error(err.response?.data?.message || "Something went wrong", {
-          style: {
-            background: "#333",
-            color: "#fff",
-          },
-        });
-      }
-    },
-  });
+		queryKey: ["authUser"],
+		queryFn: async () => {
+			try {
+				const res = await axiosInstance.get("/auth/me");
+				return res.data;
+			} catch (err) {
+				if (err.response && err.response.status === 401) {
+					return null;
+				}
+				toast.error(err.response.data.message || "Something went wrong");
+			}
+		},
+	});
 
   if (isLoading) return null;
 
@@ -84,10 +63,10 @@ function App() {
           path="/profile/:username"
           element={authUser ? <ProfilePage /> : <Navigate to={"/login"} />}
         />
-      <Route
-        path="*"
-        element={<Navigate to="/" />} // Redirect to home or a 404 page
-      />
+        <Route
+          path="*"
+          element={<Navigate to="/" />} // Redirect to home or a 404 page
+        />
       </Routes>
       <Toaster />
     </Layout>
