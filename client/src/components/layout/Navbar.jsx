@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../../lib/axios";
 import { Link } from "react-router-dom";
 import { Bell, Home, LogOut, User, Users } from "lucide-react";
-
+import darkLogo from "../../assets/dark-logo.svg";
 const Navbar = () => {
   const { data: authUser } = useQuery({ queryKey: ["authUser"] });
   const queryClient = useQueryClient();
@@ -40,7 +40,7 @@ const Navbar = () => {
             <Link to="/">
               <img
                 className="lg:h-8 h-6 rounded"
-                src="/dark-logo.svg"
+                src={darkLogo}
                 alt="LinkedIn"
               />
             </Link>
