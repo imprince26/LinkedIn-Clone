@@ -5,6 +5,6 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   define: {
-    VITE_BACKEND_URL: import.meta.env.VITE_BACKEND_URL 
+    VITE_BACKEND_URL:"https://linkedin-server-a773.onrender.com/api/v1" 
   }
 })
