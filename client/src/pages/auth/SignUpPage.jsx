@@ -7,7 +7,7 @@ const SignUpPage = () => {
       <h2 className="text-center lg:text-[2rem] text-xl font-normal text-gray-300">
         Make the most of your professional life
       </h2>
-      <div className="mt-8  mx-auto max-w-md  bg-dark-primary py-8 px-4 shadow-md shadow-gray-900 sm:rounded-lg sm:px-10">
+      <div className="mt-8  mx-auto max-w-md  bg-dark-primary py-8 px-4 shadow-md shadow-gray-900 rounded-lg sm:px-10">
         <SignUpForm />
 
         <div className="mt-6">

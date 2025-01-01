@@ -13,7 +13,7 @@ export const getSuggestedConnections = async (req, res) => {
       },
     })
       .select("name username profilePicture headline")
-      .limit(3);
+      .limit(15);
 
     res.json(suggestedUser);
   } catch (error) {
