@@ -21,7 +21,8 @@ function App() {
 				return res.data;
 			} catch (err) {
 				if (err.response && err.response.status === 401) {
-					return null;
+					console.log(err.response.data.message);
+          return null
 				}
 				toast.error(err.response.data.message || "Something went wrong");
 			}
