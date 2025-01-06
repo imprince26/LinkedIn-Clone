@@ -10,25 +10,29 @@ const LoginForm = () => {
   const queryClient = useQueryClient();
 
   const { mutate: loginMutation, isLoading } = useMutation({
-    mutationFn: (userData) => axiosInstance.post("/auth/login", userData),
-    onSuccess: () => {
-      toast.success("Logged in successfully",{
-        style : {
-          background : "#333",
-          color : "#fff",
+    mutationFn: (userData) => axiosInstance.post("/auth/login", userData, {
+      withCredentials: true  // Explicitly set withCredentials
+    }),
+    onSuccess: (response) => {
+      toast.success("Logged in successfully", {
+        style: {
+          background: "#333",
+          color: "#fff",
         }
       });
-      queryClient.invalidateQueries({ queryKey: ["authUser"] });
       
+      // Invalidate and refetch the auth user query
+      queryClient.invalidateQueries({ queryKey: ["authUser"] });
     },
     onError: (err) => {
-      toast.error(err.response.data.message || "Something went wrong",{
-        style : {
-          background : "#333",
-          color : "#fff",
+      console.error("Login Error:", err.response?.data);
+      toast.error(err.response?.data?.message || "Something went wrong", {
+        style: {
+          background: "#333",
+          color: "#fff",
         }
       });
-    },
+    }
   });
 
   const handleSubmit = (e) => {

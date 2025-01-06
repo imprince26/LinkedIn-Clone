@@ -22,7 +22,9 @@ function App() {
     queryKey: ["authUser"],
     queryFn: async () => {
       try {
-        const res = await axiosInstance.get("/auth/me");
+        const res = await axiosInstance.get("/auth/me", {
+          withCredentials: true  // Ensure credentials are sent
+        });
         
         // Check if the user is authenticated
         if (res.data.isAuthenticated) {
@@ -37,7 +39,7 @@ function App() {
           data: err.response?.data,
           message: err.message,
         });
-
+  
         // Return null for any error
         return null;
       }
@@ -46,7 +48,6 @@ function App() {
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: true
   });
-
 
   if (isLoading) return null;
 
