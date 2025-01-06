@@ -30,6 +30,8 @@ export const protectRoute = async (req, res, next) => {
           message: "Token expired. Please login again",
         });
       }
+      console.log('Cookies:', req.cookies); // Log cookies
+      console.log('Token:', req.cookies['jwt-linkedin']); // Check token
       throw tokenError;
     }
 
