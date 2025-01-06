@@ -138,27 +138,49 @@ export const logout = (req, res) => {
 
 export const getCurrentUser = async (req, res) => {
   try {
-    if (!req.user) {
-      return res.status(401).json({
-        success: false,
-        message: "Authentication required. Please log in.",
+    // Check if the request has a JWT token
+    const token = req.cookies['jwt-linkedin'];
+
+    // If no token exists, return a specific response for unauthenticated users
+    if (!token) {
+      return res.status(200).json({
+        success: true,
+        isAuthenticated: false,
+        message: "No active session"
       });
     }
 
-    const user = await User.findById(req.user._id)
+    // Verify the token
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (tokenError) {
+      // If token is invalid or expired
+      return res.status(200).json({
+        success: true,
+        isAuthenticated: false,
+        message: handleTokenError(tokenError)
+      });
+    }
+
+    // Find the user
+    const user = await User.findById(decoded.userId)
       .select({
         password: 0,
         __v: 0,
       })
       .populate("connections", "name username profilePicture headline");
 
+    // If no user found
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
+      return res.status(200).json({
+        success: true,
+        isAuthenticated: false,
+        message: "User not found"
       });
     }
 
+    // Prepare user response
     const userResponse = {
       _id: user._id,
       name: user.name,
@@ -175,6 +197,7 @@ export const getCurrentUser = async (req, res) => {
       connections: user.connections || [],
       connectionCount: user.connections.length || 0,
       createdAt: user.createdAt,
+      isAuthenticated: true
     };
 
     // Send successful response
@@ -185,25 +208,25 @@ export const getCurrentUser = async (req, res) => {
       stack: error.stack,
       name: error.name,
     });
-    if (error.name === "CastError") {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid user ID",
-      });
-    }
 
-    if (error.name === "ValidationError") {
-      return res.status(422).json({
-        success: false,
-        message: "User validation failed",
-        errors: error.errors,
-      });
-    }
-
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-      error: process.env.NODE_ENV === "development" ? error.message : undefined,
+    // Send a structured error response
+    res.status(200).json({
+      success: true,
+      isAuthenticated: false,
+      message: "Authentication process failed",
+      error: process.env.NODE_ENV === "development" ? error.message : undefined
     });
   }
 };
+
+// Helper function to handle token errors
+function handleTokenError(error) {
+  switch (error.name) {
+    case 'JsonWebTokenError':
+      return "Invalid token";
+    case 'TokenExpiredError':
+      return "Token expired";
+    default:
+      return "Authentication failed";
+  }
+}

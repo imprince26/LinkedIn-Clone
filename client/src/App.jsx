@@ -23,7 +23,14 @@ function App() {
     queryFn: async () => {
       try {
         const res = await axiosInstance.get("/auth/me");
-        return res.data;
+        
+        // Check if the user is authenticated
+        if (res.data.isAuthenticated) {
+          return res.data;
+        }
+        
+        // If not authenticated, return null
+        return null;
       } catch (err) {
         console.error("Authentication Error:", {
           status: err.response?.status,
@@ -31,26 +38,15 @@ function App() {
           message: err.message,
         });
 
-        if (err.response?.status === 401) {
-          return null;
-        }
-        throw err;
+        // Return null for any error
+        return null;
       }
     },
     retry: 1,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: true
   });
 
-  // Error handling component
-  if (error) {
-    return (
-      <div className="error-container">
-        <h1>Authentication Error</h1>
-        <pre>{JSON.stringify(error, null, 2)}</pre>
-        <button onClick={() => window.location.reload()}>Reload</button>
-      </div>
-    );
-  }
 
   if (isLoading) return null;
 
