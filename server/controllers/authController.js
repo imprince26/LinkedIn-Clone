@@ -56,36 +56,78 @@ export const signup = async (req, res) => {
   }
 };
 
+// server/controllers/authController.js
 export const login = async (req, res) => {
   try {
     const { username, password } = req.body;
 
+    // Extensive logging
+    console.log('Login Attempt:', {
+      username,
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV
+    });
+
     // Check if user exists
     const user = await User.findOne({ username });
     if (!user) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      console.warn(`Login failed: User not found - ${username}`);
+      return res.status(401).json({ 
+        message: "Invalid credentials", 
+        detail: "User not found" 
+      });
     }
 
     // Check password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      console.warn(`Login failed: Invalid password - ${username}`);
+      return res.status(401).json({ 
+        message: "Invalid credentials", 
+        detail: "Password mismatch" 
+      });
     }
 
-    // Create and send token
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "3d",
-    });
-    await res.cookie("jwt-linkedin", token, {
+    // Create token with more detailed payload
+    const token = jwt.sign(
+      { 
+        userId: user._id, 
+        username: user.username,
+        email: user.email,
+        loginTimestamp: Date.now()
+      }, 
+      process.env.JWT_SECRET, 
+      {
+        expiresIn: "3d",
+        issuer: "linkedin-clone-app"
+      }
+    );
+
+    // Enhanced cookie settings
+    res.cookie("jwt-linkedin", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
       maxAge: 3 * 24 * 60 * 60 * 1000,
     });
 
-    res.json({ message: "Logged in successfully" });
+    console.log(`Successful login for user: ${username}`);
+    res.status(200).json({ 
+      message: "Logged in successfully", 
+      userId: user._id 
+    });
+
   } catch (error) {
-    console.error("Error in login controller:", error);
-    res.status(500).json({ message: "Server error" });
+    console.error('Login Error:', {
+      message: error.message,
+      stack: error.stack,
+      username: req.body.username
+    });
+    
+    res.status(500).json({ 
+      message: "Internal server error", 
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined 
+    });
   }
 };
 

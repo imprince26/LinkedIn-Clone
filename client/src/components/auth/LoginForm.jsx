@@ -9,21 +9,58 @@ const LoginForm = () => {
   const [password, setPassword] = useState("");
   const queryClient = useQueryClient();
 
-  const { mutate: loginMutation, isLoading } = useMutation({
-    mutationFn: (userData) => axiosInstance.post("/auth/login", userData),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["authUser"] });
-    },
-    onError: (err) => {
-      toast.error(err.response.data.message || "Something went wrong",{
-        style : {
-          background : "#333",
-          color : "#fff",
+ // client/src/components/auth/LoginForm.jsx
+const { mutate: loginMutation, isLoading } = useMutation({
+  mutationFn: async (userData) => {
+    try {
+      const response = await axiosInstance.post("/auth/login", userData, {
+        // Add additional configuration
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
         }
       });
-    },
-  });
+      return response.data;
+    } catch (error) {
+      console.error('Login Request Error:', {
+        status: error.response?.status,
+        data: error.response?.data,
+        headers: error.response?.headers,
+        message: error.message
+      });
+      
+      throw error;
+    }
+  },
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ["authUser"] });
+    toast.success("Login Successful", {
+      style: {
+        background: "#333",
+        color: "#fff",
+      }
+    });
+  },
+  onError: (err) => {
+    const errorMessage = err.response?.data?.message || 
+                         err.response?.data?.detail || 
+                         "Login failed. Please try again.";
+    
+    toast.error(errorMessage, {
+      style: {
+        background: "#333",
+        color: "#fff",
+      }
+    });
 
+    // Specific error handling
+    if (err.response?.status === 401) {
+      // Handle unauthorized access
+      console.warn('Unauthorized Access Detected');
+    }
+  }
+});
   const handleSubmit = (e) => {
     e.preventDefault();
     loginMutation({ username, password });
