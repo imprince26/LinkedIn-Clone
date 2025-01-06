@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import Layout from "./components/layout/Layout";
 import HomePage from "./pages/HomePage";
@@ -10,24 +11,46 @@ import NotificationsPage from "./pages/NotificationsPage";
 import NetworkPage from "./pages/NetworkPage";
 import PostPage from "./pages/PostPage";
 import ProfilePage from "./pages/ProfilePage";
+import NotFound from "./pages/NotFound";
 
 function App() {
+  const {
+    data: authUser,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["authUser"],
+    queryFn: async () => {
+      try {
+        const res = await axiosInstance.get("/auth/me");
+        return res.data;
+      } catch (err) {
+        console.error("Authentication Error:", {
+          status: err.response?.status,
+          data: err.response?.data,
+          message: err.message,
+        });
 
-  const { data: authUser, isLoading } = useQuery({
-		queryKey: ["authUser"],
-		queryFn: async () => {
-			try {
-				const res = await axiosInstance.get("/auth/me");
-				return res.data;
-			} catch (err) {
-				if (err.response && err.response.status === 401) {
-					console.log(err.response.data.message);
-          return null
-				}
-				toast.error(err.response.data.message || "Something went wrong");
-			}
-		},
-	});
+        if (err.response?.status === 401) {
+          return null;
+        }
+        throw err;
+      }
+    },
+    retry: 1,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+
+  // Error handling component
+  if (error) {
+    return (
+      <div className="error-container">
+        <h1>Authentication Error</h1>
+        <pre>{JSON.stringify(error, null, 2)}</pre>
+        <button onClick={() => window.location.reload()}>Reload</button>
+      </div>
+    );
+  }
 
   if (isLoading) return null;
 
@@ -64,10 +87,7 @@ function App() {
           path="/profile/:username"
           element={authUser ? <ProfilePage /> : <Navigate to={"/login"} />}
         />
-        <Route
-          path="*"
-          element={<Navigate to="/" />} // Redirect to home or a 404 page
-        />
+        <Route path="*" element={<NotFound />} />
       </Routes>
       <Toaster />
     </Layout>

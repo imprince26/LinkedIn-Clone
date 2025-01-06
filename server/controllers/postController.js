@@ -1,7 +1,6 @@
 import cloudinary from "../lib/cloudinary.js";
 import Post from "../models/postModel.js";
 import Notification from "../models/notificationModel.js";
-import { sendCommentNotificationEmail } from "../emails/emailHandlers.js";
 
 export const getFeedPosts = async (req, res) => {
   try {
@@ -130,19 +129,6 @@ export const createComment = async (req, res) => {
       });
 
       await newNotification.save();
-
-      try {
-        const postUrl = process.env.CLIENT_URL + "/post/" + postId;
-        await sendCommentNotificationEmail(
-          post.author.email,
-          post.author.name,
-          req.user.name,
-          postUrl,
-          content
-        );
-      } catch (error) {
-        console.log("Error in sending comment notification email:", error);
-      }
     }
 
     res.status(200).json(post);
