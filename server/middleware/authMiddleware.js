@@ -57,4 +57,5 @@ export const protectRoute = async (req, res, next) => {
       error: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }
+  
 };
