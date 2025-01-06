@@ -56,78 +56,44 @@ export const signup = async (req, res) => {
   }
 };
 
-// server/controllers/authController.js
 export const login = async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    // Extensive logging
-    console.log('Login Attempt:', {
-      username,
-      timestamp: new Date().toISOString(),
-      environment: process.env.NODE_ENV
-    });
-
-    // Check if user exists
     const user = await User.findOne({ username });
     if (!user) {
-      console.warn(`Login failed: User not found - ${username}`);
-      return res.status(401).json({ 
-        message: "Invalid credentials", 
-        detail: "User not found" 
-      });
+      return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    // Check password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      console.warn(`Login failed: Invalid password - ${username}`);
-      return res.status(401).json({ 
-        message: "Invalid credentials", 
-        detail: "Password mismatch" 
-      });
+      return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    // Create token with more detailed payload
     const token = jwt.sign(
       { 
         userId: user._id, 
-        username: user.username,
-        email: user.email,
-        loginTimestamp: Date.now()
+        username: user.username 
       }, 
       process.env.JWT_SECRET, 
-      {
-        expiresIn: "3d",
-        issuer: "linkedin-clone-app"
-      }
+      { expiresIn: "3d" }
     );
 
     // Enhanced cookie settings
     res.cookie("jwt-linkedin", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
+      sameSite: 'strict',
       maxAge: 3 * 24 * 60 * 60 * 1000,
     });
 
-    console.log(`Successful login for user: ${username}`);
     res.status(200).json({ 
-      message: "Logged in successfully", 
-      userId: user._id 
+      message: "Login successful", 
+      isAuthenticated: true 
     });
-
   } catch (error) {
-    console.error('Login Error:', {
-      message: error.message,
-      stack: error.stack,
-      username: req.body.username
-    });
-    
-    res.status(500).json({ 
-      message: "Internal server error", 
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined 
-    });
+    console.error("Login error:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };
 

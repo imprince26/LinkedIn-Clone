@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+import { useEffect } from "react";
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import Layout from "./components/layout/Layout";
 import HomePage from "./pages/HomePage";
@@ -18,43 +19,53 @@ function App() {
     data: authUser,
     isLoading,
     error,
+    refetch  // Add refetch method
   } = useQuery({
     queryKey: ["authUser"],
     queryFn: async () => {
       try {
         const res = await axiosInstance.get("/auth/me", {
-          withCredentials: true  // Ensure credentials are sent
+          withCredentials: true
         });
         
-        // Check if the user is authenticated
+        // More robust authentication check
         if (res.data.isAuthenticated) {
           return res.data;
         }
         
-        // If not authenticated, return null
         return null;
       } catch (err) {
-        console.error("Authentication Error:", {
-          status: err.response?.status,
-          data: err.response?.data,
-          message: err.message,
-        });
-  
-        // Return null for any error
+        console.error("Authentication Error:", err);
         return null;
       }
     },
     retry: 1,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 0,  // Ensure fresh data on each check
     refetchOnWindowFocus: true
   });
 
-  if (isLoading) return null;
+  // Add navigation logic
+  const navigate = useNavigate();
+
+  // Effect to handle authentication state changes
+  useEffect(() => {
+    if (authUser) {
+      navigate('/');  // Redirect to home page on successful authentication
+    }
+  }, [authUser, navigate]);
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <Layout>
       <Routes>
-        <Route
+      <Route
           path="/"
           element={authUser ? <HomePage /> : <Navigate to={"/login"} />}
         />
@@ -64,7 +75,13 @@ function App() {
         />
         <Route
           path="/login"
-          element={!authUser ? <LoginPage /> : <Navigate to={"/"} />}
+          element={
+            !authUser ? (
+              <LoginPage refetchAuth={refetch} />  // Pass refetch method
+            ) : (
+              <Navigate to={"/"} />
+            )
+          }
         />
         <Route
           path="/notifications"

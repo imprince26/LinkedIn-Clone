@@ -3,26 +3,32 @@ import { useState } from "react";
 import { axiosInstance } from "../../lib/axios";
 import toast from "react-hot-toast";
 import { Loader } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const { mutate: loginMutation, isLoading } = useMutation({
     mutationFn: (userData) => axiosInstance.post("/auth/login", userData, {
-      withCredentials: true  // Explicitly set withCredentials
+      withCredentials: true
     }),
-    onSuccess: (response) => {
+    onSuccess: async (response) => {
+      // Multiple invalidation strategies
+      await queryClient.invalidateQueries({ queryKey: ["authUser"] });
+      
+
       toast.success("Logged in successfully", {
         style: {
           background: "#333",
           color: "#fff",
         }
       });
-      
-      // Invalidate and refetch the auth user query
-      queryClient.invalidateQueries({ queryKey: ["authUser"] });
+
+      // Programmatic navigation
+      navigate('/');
     },
     onError: (err) => {
       console.error("Login Error:", err.response?.data);
@@ -34,6 +40,7 @@ const LoginForm = () => {
       });
     }
   });
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
