@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { Link } from "react-router-dom";
 import { Home, UserPlus, Bell } from "lucide-react";
 export default function Sidebar({ user }) {
@@ -20,7 +21,7 @@ export default function Sidebar({ user }) {
         </Link>
         <p className="text-info">{user.headline}</p>
         <p className="text-info text-xs">
-          {user.connections.length} connections
+          {user?.connections.length} connections
         </p>
       </div>
       <div className="border-t border-gray-400 p-4">

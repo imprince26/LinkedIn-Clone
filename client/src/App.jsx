@@ -5,7 +5,7 @@ import Layout from "./components/layout/Layout";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/auth/LoginPage";
 import SignUpPage from "./pages/auth/SignUpPage";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "./lib/axios";
 import NotificationsPage from "./pages/NotificationsPage";
@@ -18,8 +18,7 @@ function App() {
   const {
     data: authUser,
     isLoading,
-    error,
-    refetch  // Add refetch method
+    refetch 
   } = useQuery({
     queryKey: ["authUser"],
     queryFn: async () => {
@@ -27,8 +26,7 @@ function App() {
         const res = await axiosInstance.get("/auth/me", {
           withCredentials: true
         });
-        
-        // More robust authentication check
+      
         if (res.data.isAuthenticated) {
           return res.data;
         }
@@ -40,19 +38,17 @@ function App() {
       }
     },
     retry: 1,
-    staleTime: 0,  // Ensure fresh data on each check
+    staleTime: 0, 
     refetchOnWindowFocus: true
   });
 
-  // Add navigation logic
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  // Effect to handle authentication state changes
-  useEffect(() => {
-    if (authUser) {
-      navigate('/');  // Redirect to home page on successful authentication
-    }
-  }, [authUser, navigate]);
+  // useEffect(() => {
+  //   if (authUser) {
+  //     navigate('/');
+  //   }
+  // }, [authUser, navigate]);
 
   if (isLoading) {
     return (

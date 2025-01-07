@@ -13,21 +13,17 @@ const LoginForm = () => {
 
   const { mutate: loginMutation, isLoading } = useMutation({
     mutationFn: (userData) => axiosInstance.post("/auth/login", userData, {
-      withCredentials:"include"
+      withCredentials: true
     }),
-    onSuccess: async (response) => {
-      // Multiple invalidation strategies
-      await queryClient.invalidateQueries({ queryKey: ["authUser"] });
+    onSuccess:  () => {
+      queryClient.invalidateQueries({ queryKey: ["authUser"] });
       
-
       toast.success("Logged in successfully", {
         style: {
           background: "#333",
           color: "#fff",
         }
       });
-
-      // Programmatic navigation
       navigate('/');
     },
     onError: (err) => {
