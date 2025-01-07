@@ -44,7 +44,7 @@ export const signup = async (req, res) => {
     res.cookie("jwt-linkedin", token, {
       httpOnly: true,
       secure : true,
-      sameSite: 'None',
+      sameSite: false,
       maxAge: 3 * 24 * 60 * 60 * 1000,
     });
 
@@ -84,7 +84,7 @@ export const login = async (req, res) => {
     res.cookie("jwt-linkedin", token, {
       httpOnly: true,
       secure:true,
-      sameSite: 'None',
+      sameSite:false,
       maxAge: 3 * 24 * 60 * 60 * 1000,
     });
 
