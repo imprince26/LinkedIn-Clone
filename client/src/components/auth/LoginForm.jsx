@@ -13,7 +13,7 @@ const LoginForm = () => {
 
   const { mutate: loginMutation, isLoading } = useMutation({
     mutationFn: (userData) => axiosInstance.post("/auth/login", userData, {
-      withCredentials: true
+      withCredentials:"include"
     }),
     onSuccess: async (response) => {
       // Multiple invalidation strategies
