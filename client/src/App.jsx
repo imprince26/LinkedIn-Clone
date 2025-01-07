@@ -42,13 +42,13 @@ function App() {
     refetchOnWindowFocus: true
   });
 
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   if (authUser) {
-  //     navigate('/');
-  //   }
-  // }, [authUser, navigate]);
+  useEffect(() => {
+    if (authUser) {
+      navigate('/');
+    }
+  }, [authUser, navigate]);
 
   if (isLoading) {
     return (
