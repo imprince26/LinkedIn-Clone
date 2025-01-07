@@ -1,6 +1,5 @@
-/* eslint-disable no-unused-vars */
 import { useEffect } from "react";
-import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate, useLocation } from "react-router-dom";
 import Layout from "./components/layout/Layout";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/auth/LoginPage";
@@ -43,12 +42,14 @@ function App() {
   });
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    if (authUser) {
-      navigate('/');
+    // If user is not authenticated and tries to access a protected route, redirect to login
+    if (!authUser && location.pathname !== '/login' && location.pathname !== '/signup') {
+      navigate('/login');
     }
-  }, [authUser, navigate]);
+  }, [authUser, navigate, location]);
 
   if (isLoading) {
     return (
@@ -61,7 +62,7 @@ function App() {
   return (
     <Layout>
       <Routes>
-      <Route
+        <Route
           path="/"
           element={authUser ? <HomePage /> : <Navigate to={"/login"} />}
         />
