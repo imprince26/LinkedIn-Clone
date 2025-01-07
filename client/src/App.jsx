@@ -73,7 +73,7 @@ function App() {
           path="/login"
           element={
             !authUser ? (
-              <LoginPage refetchAuth={refetch} />  // Pass refetch method
+              <LoginPage refetchAuth={refetch} /> 
             ) : (
               <Navigate to={"/"} />
             )

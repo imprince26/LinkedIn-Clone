@@ -114,10 +114,8 @@ export const logout = (req, res) => {
 
 export const getCurrentUser = async (req, res) => {
   try {
-    // Check if the request has a JWT token
     const token = req.cookies['jwt-linkedin'];
 
-    // If no token exists, return a specific response for unauthenticated users
     if (!token) {
       return res.status(200).json({
         success: true,
@@ -126,12 +124,10 @@ export const getCurrentUser = async (req, res) => {
       });
     }
 
-    // Verify the token
     let decoded;
     try {
       decoded = jwt.verify(token, process.env.JWT_SECRET);
     } catch (tokenError) {
-      // If token is invalid or expired
       return res.status(200).json({
         success: true,
         isAuthenticated: false,
@@ -139,7 +135,6 @@ export const getCurrentUser = async (req, res) => {
       });
     }
 
-    // Find the user
     const user = await User.findById(decoded.userId)
       .select({
         password: 0,
@@ -147,7 +142,6 @@ export const getCurrentUser = async (req, res) => {
       })
       .populate("connections", "name username profilePicture headline");
 
-    // If no user found
     if (!user) {
       return res.status(200).json({
         success: true,
@@ -156,7 +150,6 @@ export const getCurrentUser = async (req, res) => {
       });
     }
 
-    // Prepare user response
     const userResponse = {
       _id: user._id,
       name: user.name,
@@ -176,8 +169,10 @@ export const getCurrentUser = async (req, res) => {
       isAuthenticated: true
     };
 
-    // Send successful response
-    res.status(200).json(userResponse);
+    res.status(200).json({
+      ...userResponse,
+      isAuthenticated: true
+    });
   } catch (error) {
     console.error("Error in getCurrentUser controller:", {
       message: error.message,
@@ -185,17 +180,14 @@ export const getCurrentUser = async (req, res) => {
       name: error.name,
     });
 
-    // Send a structured error response
     res.status(200).json({
       success: true,
-      isAuthenticated: false,
+      isAuthenticated: true,
       message: "Authentication process failed",
-      error: process.env.NODE_ENV === "development" ? error.message : undefined
     });
   }
 };
 
-// Helper function to handle token errors
 function handleTokenError(error) {
   switch (error.name) {
     case 'JsonWebTokenError':
