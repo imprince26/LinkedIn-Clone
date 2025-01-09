@@ -187,14 +187,3 @@ export const getCurrentUser = async (req, res) => {
     });
   }
 };
-
-function handleTokenError(error) {
-  switch (error.name) {
-    case 'JsonWebTokenError':
-      return "Invalid token";
-    case 'TokenExpiredError':
-      return "Token expired";
-    default:
-      return "Authentication failed";
-  }
-}
