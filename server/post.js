@@ -40,9 +40,6 @@ const postsData = [
     }
   ]
   
-  
-  
-
 // Function to seed posts
 const seedPosts = async () => {
   try {

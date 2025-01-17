@@ -10,6 +10,7 @@ lerna-debug.log*
 client/node_modules
 server/node_modules
 server/user.js
+server/post.js
 
 dist
 dist-ssr
