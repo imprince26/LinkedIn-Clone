@@ -9,9 +9,9 @@ import {
   MessageCircle,
   Send,
   Share2,
-  ThumbsUp,
   Trash2,
 } from "lucide-react";
+import { BiLike,BiSolidLike  } from "react-icons/bi";
 import { formatDistanceToNow } from "date-fns";
 
 import PostAction from "./PostAction";
@@ -163,24 +163,25 @@ const Post = ({ post }) => {
         />
       )}
 
-        <div className="flex justify-between  ">
+        <div className="flex justify-between">
           <PostAction
             icon={
-              <ThumbsUp
-                size={18}
-                className={isLiked ? "text-blue-500  fill-blue-500" : ""}
-              />
+              !isLiked ? (
+                <BiLike size={22} />
+              ) : (
+                <BiSolidLike size={22} className="fill-blue-500" />
+              )
             }
             text={`Like (${post.likes.length})`}
             onClick={handleLikePost}
           />
 
           <PostAction
-            icon={<MessageCircle size={18} />}
+            icon={<MessageCircle size={22} />}
             text={`Comment (${comments.length})`}
             onClick={() => setShowComments(!showComments)}
           />
-          <PostAction icon={<Share2 size={18} />} text="Share" />
+          <PostAction icon={<Share2 size={22} />} text="Share" />
         </div>
       </div>
 
@@ -223,7 +224,7 @@ const Post = ({ post }) => {
 
             <button
               type="submit"
-              className="bg-primary ml-2  text-white p-3 rounded-full hover:bg-primary-dark transition duration-300"
+              className="bg-primary ml-2 text-white p-3 rounded-full hover:bg-primary-dark transition duration-300"
               disabled={isAddingComment}
             >
               {isAddingComment ? (

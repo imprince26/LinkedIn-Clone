@@ -108,7 +108,7 @@ const PostCreation = ({ user }) => {
       </div>
 
       {mediaPreview && (
-        <div className="mt-4 relative">
+        <div className="mt-4  relative">
           {mediaType === 'image' ? (
             <img 
               src={mediaPreview} 
