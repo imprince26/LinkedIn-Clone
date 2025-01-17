@@ -4,6 +4,7 @@ import Sidebar from "../components/Sidebar";
 import { UserPlus } from "lucide-react";
 import FriendRequest from "../components/FriendRequest";
 import UserCard from "../components/UserCard";
+import RecommendedUser from "../components/RecommendedUser";
 
 const NetworkPage = () => {
   const { data: user } = useQuery({ queryKey: ["authUser"] });
@@ -16,6 +17,13 @@ const NetworkPage = () => {
   const { data: connections } = useQuery({
     queryKey: ["connections"],
     queryFn: () => axiosInstance.get("/connections"),
+  });
+  const { data: recommendedUsers } = useQuery({
+    queryKey: ["recommendedUsers"],
+    queryFn: async () => {
+      const res = await axiosInstance.get("/users/suggestions");
+      return res.data;
+    },
   });
 
   return (
@@ -65,6 +73,16 @@ const NetworkPage = () => {
               </div>
             </div>
           )}
+            {recommendedUsers?.length > 0 && (
+        <div className="col-span-1 lg:col-span-1 md:hidden block">
+          <div className="bg-dark-primary rounded-lg shadow p-4">
+            <h2 className="font-semibold mb-4">People you may know</h2>
+            {recommendedUsers?.map((user) => (
+              <RecommendedUser key={user._id} user={user} />
+            ))}
+          </div>
+        </div>
+      )}
         </div>
       </div>
     </div>
