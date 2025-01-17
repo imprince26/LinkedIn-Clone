@@ -1,4 +1,4 @@
-import cloudinary from "../lib/cloudinary.js";
+import { uploadToCloudinary, deleteFromCloudinary } from "../lib/cloudinary.js";
 import Post from "../models/postModel.js";
 import Notification from "../models/notificationModel.js";
 
@@ -20,75 +20,58 @@ export const getFeedPosts = async (req, res) => {
 
 export const createPost = async (req, res) => {
   try {
-    const { content, image } = req.body;
-    let newPost;
+      const { content, media, mediaType } = req.body;
 
-    // Validate input
-    if (!content && !image) {
-      return res.status(400).json({
-        message: "Post must have either content or an image",
-      });
-    }
-    if (content && content.length > 1000) {
-      return res.status(400).json({
-        message: "Post content cannot exceed 1000 characters",
-      });
-    }
+      // Validate input
+      if (!content && !media) {
+          return res.status(400).json({
+              message: "Post must have either content or media"
+          });
+      }
 
-    if (image) {
-      const imgResult = await cloudinary.uploader.upload(image);
-      newPost = new Post({
-        author: req.user._id,
-        content,
-        image: imgResult.secure_url,
-      });
-    } else {
-      newPost = new Post({
-        author: req.user._id,
-        content,
-      });
-    }
+      let mediaUploadResult = null;
+      if (media) {
+          mediaUploadResult = await uploadToCloudinary(
+              media, 
+              'linkedin-posts', 
+              mediaType || 'image'
+          );
+      }
 
-    await newPost.save();
+      const newPost = new Post({
+          author: req.user._id,
+          content,
+          media: mediaUploadResult ? {
+              url: mediaUploadResult.url,
+              publicId: mediaUploadResult.publicId,
+              resourceType: mediaUploadResult.resourceType
+          } : null
+      });
 
-    res.status(201).json(newPost);
+      await newPost.save();
+      res.status(201).json(newPost);
   } catch (error) {
-    console.error("Error in createPost controller:", error);
-    res.status(500).json({ message: "Server error" });
+      console.error("Post Creation Error:", error);
+      res.status(500).json({ message: "Server error" });
   }
 };
 
 export const deletePost = async (req, res) => {
   try {
-    const postId = req.params.id;
-    const userId = req.user._id;
+      const post = await Post.findById(req.params.id);
 
-    const post = await Post.findById(postId);
+      if (post.media && post.media.publicId) {
+          await deleteFromCloudinary(
+              post.media.publicId, 
+              post.media.resourceType
+          );
+      }
 
-    if (!post) {
-      return res.status(404).json({ message: "Post not found" });
-    }
-
-    // check if the current user is the author of the post
-    if (post.author.toString() !== userId.toString()) {
-      return res
-        .status(403)
-        .json({ message: "You are not authorized to delete this post" });
-    }
-
-    // delete the image from cloudinary as well!
-    if (post.image) {
-      await cloudinary.uploader.destroy(
-        post.image.split("/").pop().split(".")[0]
-      );
-    }
-
-    await Post.findByIdAndDelete(postId);
-
-    res.status(200).json({ message: "Post deleted successfully" });
+      await Post.findByIdAndDelete(req.params.id);
+      res.status(200).json({ message: "Post deleted successfully" });
   } catch (error) {
-    console.log("Error in delete post controller", error.message);
-    res.status(500).json({ message: "Server error" });
+      console.error("Post Deletion Error:", error);
+      res.status(500).json({ message: "Server error" });
   }
 };
 

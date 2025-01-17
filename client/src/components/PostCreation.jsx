@@ -2,12 +2,13 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
-import { Image, Loader } from "lucide-react";
+import { Image, Video, X, Loader } from "lucide-react";
 
 const PostCreation = ({ user }) => {
   const [content, setContent] = useState("");
-  const [image, setImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
+  const [media, setMedia] = useState(null);
+  const [mediaType, setMediaType] = useState(null);
+  const [mediaPreview, setMediaPreview] = useState(null);
 
   const queryClient = useQueryClient();
 
@@ -29,7 +30,7 @@ const PostCreation = ({ user }) => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
     },
     onError: (err) => {
-      toast.error(err.response.data.message || "Failed to create post", {
+      toast.error(err.response?.data?.message || "Failed to create post", {
         style: {
           background: "#333",
           color: "#fff",
@@ -39,9 +40,22 @@ const PostCreation = ({ user }) => {
   });
 
   const handlePostCreation = async () => {
+    if (!content.trim() && !media) {
+      toast.error("Please add some content or media", {
+        style: {
+          background: "#333",
+          color: "#fff",
+        },
+      });
+      return;
+    }
+
     try {
-      const postData = { content };
-      if (image) postData.image = await readFileAsDataURL(image);
+      const postData = { 
+        content, 
+        media: media ? media : null, 
+        mediaType: mediaType 
+      };
 
       createPostMutation(postData);
     } catch (error) {
@@ -51,27 +65,30 @@ const PostCreation = ({ user }) => {
 
   const resetForm = () => {
     setContent("");
-    setImage(null);
-    setImagePreview(null);
+    setMedia(null);
+    setMediaType(null);
+    setMediaPreview(null);
   };
 
-  const handleImageChange = (e) => {
+  const handleMediaChange = (e) => {
     const file = e.target.files[0];
-    setImage(file);
     if (file) {
-      readFileAsDataURL(file).then(setImagePreview);
-    } else {
-      setImagePreview(null);
+      const reader = new FileReader();
+      const fileType = file.type.split('/')[0];
+
+      reader.onloadend = () => {
+        setMedia(reader.result);
+        setMediaType(fileType);
+        setMediaPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
-  const readFileAsDataURL = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
+  const removeMedia = () => {
+    setMedia(null);
+    setMediaType(null);
+    setMediaPreview(null);
   };
 
   return (
@@ -90,13 +107,27 @@ const PostCreation = ({ user }) => {
         />
       </div>
 
-      {imagePreview && (
-        <div className="mt-4">
-          <img
-            src={imagePreview}
-            alt="Selected"
-            className="w-full h-auto rounded-lg"
-          />
+      {mediaPreview && (
+        <div className="mt-4 relative">
+          {mediaType === 'image' ? (
+            <img 
+              src={mediaPreview} 
+              alt="Selected" 
+              className="w-full h-auto rounded-lg" 
+            />
+          ) : (
+            <video 
+              src={mediaPreview} 
+              controls 
+              className="w-full rounded-lg"
+            />
+          )}
+          <button 
+            onClick={removeMedia}
+            className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full"
+          >
+            <X size={16} />
+          </button>
         </div>
       )}
 
@@ -107,9 +138,9 @@ const PostCreation = ({ user }) => {
             <span>Photo</span>
             <input
               type="file"
-              accept="image/*"
+              accept="image/*,video/*"
               className="hidden"
-              onChange={handleImageChange}
+              onChange={handleMediaChange}
             />
           </label>
         </div>
@@ -125,4 +156,5 @@ const PostCreation = ({ user }) => {
     </div>
   );
 };
+
 export default PostCreation;
