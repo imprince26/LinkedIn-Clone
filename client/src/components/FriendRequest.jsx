@@ -54,7 +54,7 @@ const FriendRequest = ({ request }) => {
         <div>
           <Link
             to={`/profile/${request.sender.username}`}
-            className="font-semibold text-[1rem] md:text-lg"
+            className="font-semibold text-[1rem] pr-2 md:text-lg"
           >
             {request.sender.name}
           </Link>
