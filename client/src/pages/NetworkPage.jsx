@@ -20,7 +20,7 @@ const NetworkPage = () => {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-      <div className="col-span-1 lg:col-span-1">
+      <div className="hidden md:block col-span-1 lg:col-span-1">
         <Sidebar user={user} />
       </div>
       <div className="col-span-1 lg:col-span-3">

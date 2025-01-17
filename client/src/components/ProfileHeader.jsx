@@ -28,21 +28,21 @@ const ProfileHeader = ({ userData, onSave, isOwnProfile }) => {
     mutationFn: (userId) =>
       axiosInstance.post(`/connections/request/${userId}`),
     onSuccess: () => {
-      toast.success("Connection request sent",{
-        style : {
-          background : "#333",
-          color : "#fff",
-        }
+      toast.success("Connection request sent", {
+        style: {
+          background: "#333",
+          color: "#fff",
+        },
       });
       refetchConnectionStatus();
       queryClient.invalidateQueries(["connectionRequests"]);
     },
     onError: (error) => {
-      toast.error(error.response?.data?.message || "An error occurred",{
-        style : {
-          background : "#333",
-          color : "#fff",
-        }
+      toast.error(error.response?.data?.message || "An error occurred", {
+        style: {
+          background: "#333",
+          color: "#fff",
+        },
       });
     },
   });
@@ -51,21 +51,21 @@ const ProfileHeader = ({ userData, onSave, isOwnProfile }) => {
     mutationFn: (requestId) =>
       axiosInstance.put(`/connections/accept/${requestId}`),
     onSuccess: () => {
-      toast.success("Connection request accepted",{
-        style : {
-          background : "#333",
-          color : "#fff",
-        }
+      toast.success("Connection request accepted", {
+        style: {
+          background: "#333",
+          color: "#fff",
+        },
       });
       refetchConnectionStatus();
       queryClient.invalidateQueries(["connectionRequests"]);
     },
     onError: (error) => {
-      toast.error(error.response?.data?.message || "An error occurred",{
-        style : {
-          background : "#333",
-          color : "#fff",
-        }
+      toast.error(error.response?.data?.message || "An error occurred", {
+        style: {
+          background: "#333",
+          color: "#fff",
+        },
       });
     },
   });
@@ -74,21 +74,21 @@ const ProfileHeader = ({ userData, onSave, isOwnProfile }) => {
     mutationFn: (requestId) =>
       axiosInstance.put(`/connections/reject/${requestId}`),
     onSuccess: () => {
-      toast.success("Connection request rejected",{
-        style : {
-          background : "#333",
-          color : "#fff",
-        }
+      toast.success("Connection request rejected", {
+        style: {
+          background: "#333",
+          color: "#fff",
+        },
       });
       refetchConnectionStatus();
       queryClient.invalidateQueries(["connectionRequests"]);
     },
     onError: (error) => {
-      toast.error(error.response?.data?.message || "An error occurred",{
-        style : {
-          background : "#333",
-          color : "#fff",
-        }
+      toast.error(error.response?.data?.message || "An error occurred", {
+        style: {
+          background: "#333",
+          color: "#fff",
+        },
       });
     },
   });
@@ -96,21 +96,21 @@ const ProfileHeader = ({ userData, onSave, isOwnProfile }) => {
   const { mutate: removeConnection } = useMutation({
     mutationFn: (userId) => axiosInstance.delete(`/connections/${userId}`),
     onSuccess: () => {
-      toast.success("Connection removed",{
-        style : {
-          background : "#333",
-          color : "#fff",
-        }
+      toast.success("Connection removed", {
+        style: {
+          background: "#333",
+          color: "#fff",
+        },
       });
       refetchConnectionStatus();
       queryClient.invalidateQueries(["connectionRequests"]);
     },
     onError: (error) => {
-      toast.error(error.response?.data?.message || "An error occurred",{
-        style : {
-          background : "#333",
-          color : "#fff",
-        }
+      toast.error(error.response?.data?.message || "An error occurred", {
+        style: {
+          background: "#333",
+          color: "#fff",
+        },
       });
     },
   });
@@ -202,7 +202,7 @@ const ProfileHeader = ({ userData, onSave, isOwnProfile }) => {
   return (
     <div className="bg-dark-primary shadow rounded-lg mb-6">
       <div
-        className="relative h-48 rounded-t-lg bg-cover bg-center"
+        className="relative md:h-48 h-24 rounded-t-lg bg-cover bg-center"
         style={{
           backgroundImage: `url('${
             editedData.bannerImg || userData.bannerImg || "/banner.png"
@@ -257,7 +257,7 @@ const ProfileHeader = ({ userData, onSave, isOwnProfile }) => {
               onChange={(e) =>
                 setEditedData({ ...editedData, name: e.target.value })
               }
-              className=" text-gray-300 bg-transparent border border-gray-300  mb-6 text-center rounded "
+              className=" text-gray-300 bg-transparent  border border-gray-300  mb-6 text-center rounded focus:border-blue-500 outline-none "
             />
           ) : (
             <h1 className="text-2xl font-bold mb-2">{userData.name}</h1>
@@ -270,7 +270,7 @@ const ProfileHeader = ({ userData, onSave, isOwnProfile }) => {
               onChange={(e) =>
                 setEditedData({ ...editedData, headline: e.target.value })
               }
-              className="text-gray-300 bg-transparent border border-gray-300 mb-3 text-center  rounded "
+              className="text-gray-300 bg-transparent border border-gray-300 mb-3 text-center  rounded focus:border-blue-500 outline-none "
             />
           ) : (
             <p className="text-gray-300">{userData.headline}</p>
@@ -285,7 +285,7 @@ const ProfileHeader = ({ userData, onSave, isOwnProfile }) => {
                 onChange={(e) =>
                   setEditedData({ ...editedData, location: e.target.value })
                 }
-                className="text-gray-300 h-8 bg-transparent border border-gray-300 text-center  rounded "
+                className="text-gray-300 h-8 bg-transparent border border-gray-300 text-center  rounded focus:border-blue-500 outline-none "
               />
             ) : (
               <span className="text-gray-400">{userData.location}</span>
