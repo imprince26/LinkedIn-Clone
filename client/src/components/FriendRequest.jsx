@@ -41,7 +41,7 @@ const FriendRequest = ({ request }) => {
   });
 
   return (
-    <div className="bg-transparent rounded-lg shadow p-4 flex items-center justify-between transition-all hover:shadow-md">
+    <div className="bg-transparent md:w-auto w-[85vw] rounded-lg shadow p-4 flex items-center justify-between transition-all hover:shadow-md">
       <div className="flex items-center gap-4">
         <Link to={`/profile/${request.sender.username}`}>
           <img
@@ -51,10 +51,10 @@ const FriendRequest = ({ request }) => {
           />
         </Link>
 
-        <div>
+        <div className="">
           <Link
             to={`/profile/${request.sender.username}`}
-            className="font-semibold text-[1rem] pr-2 md:text-lg"
+            className="font-semibold text-[1rem] md:text-lg"
           >
             {request.sender.name}
           </Link>
@@ -64,7 +64,7 @@ const FriendRequest = ({ request }) => {
         </div>
       </div>
 
-      <div className="space-x-2">
+      <div className="md:space-x-2 space-x-1">
         <button
           className="bg-primary text-[.8rem] md:text-lg text-white md:px-4 md:py-2 px-2 py-1 rounded-md hover:brightness-90 transition-colors"
           onClick={() => acceptConnectionRequest(request._id)}
