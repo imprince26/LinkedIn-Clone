@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { axiosInstance } from "../lib/axios";
