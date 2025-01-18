@@ -2,14 +2,14 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../../lib/axios.js";
 import { toast } from "react-hot-toast";
-import { Loader } from "lucide-react";
+import { Loader, Eye, EyeOff } from "lucide-react"; 
 
 const SignUpForm = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
+  const [showPassword, setShowPassword] = useState(false); 
   const queryClient = useQueryClient();
 
   const { mutate: signUpMutation, isLoading } = useMutation({
@@ -18,19 +18,19 @@ const SignUpForm = () => {
       return res.data;
     },
     onSuccess: () => {
-      toast.success("Account created successfully",{
-        style : {
-          background : "#333",
-          color : "#fff",
+      toast.success("Account created successfully", {
+        style: {
+          background: "#333",
+          color: "#fff",
         }
       });
       queryClient.invalidateQueries({ queryKey: ["authUser"] });
     },
     onError: (err) => {
-      toast.error(err.response.data.message || "Something went wrong",{
-        style : {
-          background : "#333",
-          color : "#fff",
+      toast.error(err.response.data.message || "Something went wrong", {
+        style: {
+          background: "#333",
+          color: "#fff",
         }
       });
     },
@@ -40,12 +40,14 @@ const SignUpForm = () => {
     e.preventDefault();
     signUpMutation({ name, username, email, password });
   };
+
   const baseClass =
-    " bg-transparent text-md text-gray-100 h-10 border border-gray-400 focus:outline focus:border-primary pl-4 mt-1 w-full rounded-lg";
+    "bg-transparent text-md text-gray-100 h-10 border border-gray-400 focus:outline focus:border-primary pl-4 mt-1 w-full rounded-lg";
+
   return (
     <form onSubmit={handleSignUp} className="flex flex-col gap-4">
       <div className="flex flex-col">
-        <span className="text-md  text-gray-100 ">Full name</span>
+        <span className="text-md text-gray-100">Full name</span>
         <input
           type="text"
           value={name}
@@ -55,7 +57,7 @@ const SignUpForm = () => {
         />
       </div>
       <div className="">
-        <span className="text-md  text-gray-100">Username</span>
+        <span className="text-md text-gray-100">Username</span>
         <input
           type="text"
           value={username}
@@ -65,7 +67,7 @@ const SignUpForm = () => {
         />
       </div>
       <div className="">
-        <span className="text-md  text-gray-100 ">Email</span>
+        <span className="text-md text-gray-100">Email</span>
         <input
           type="email"
           value={email}
@@ -74,17 +76,22 @@ const SignUpForm = () => {
           required
         />
       </div>
-      <div className="">
-        <span className="text-md  text-gray-100">
-          Password (6+ characters)
-        </span>
+      <div className="relative">
+        <span className="text-md text-gray-100">Password (6+ characters)</span>
         <input
-          type="password"
+          type={showPassword ? "text" : "password"}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className={baseClass}
           required
         />
+        <button
+          type="button"
+          onClick={() => setShowPassword(!showPassword)} // Toggle password visibility
+          className="absolute right-3 top-9"
+        >
+          {showPassword ? <EyeOff className="text-gray-400" /> : <Eye className="text-gray-400" />}
+        </button>
       </div>
 
       <button
@@ -101,4 +108,5 @@ const SignUpForm = () => {
     </form>
   );
 };
+
 export default SignUpForm;

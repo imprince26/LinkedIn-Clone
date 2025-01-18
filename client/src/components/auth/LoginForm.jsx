@@ -2,12 +2,13 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { axiosInstance } from "../../lib/axios";
 import toast from "react-hot-toast";
-import { Loader } from "lucide-react";
+import { Loader, Eye, EyeOff } from "lucide-react"; // Import eye icons
 import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // State for password visibility
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -15,7 +16,7 @@ const LoginForm = () => {
     mutationFn: (userData) => axiosInstance.post("/auth/login", userData, {
       withCredentials: true
     }),
-    onSuccess:  () => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["authUser"] });
       
       toast.success("Logged in successfully", {
@@ -37,17 +38,18 @@ const LoginForm = () => {
     }
   });
 
-
   const handleSubmit = (e) => {
     e.preventDefault();
     loginMutation({ username, password });
   };
+
   const baseClass =
-    "bg-transparent placeholder:text-info placeholder:text-lg text-lg text-gray-100 h-[3.5rem] border border-gray-400 focus:outline focus:border-primary  pl-4 w-full rounded-lg";
+    "bg-transparent placeholder:text-info placeholder:text-lg text-lg text-gray-100 h-[3.5rem] border border-gray-400 focus:outline focus:border-primary pl-4 w-full rounded-lg";
+
   return (
     <form onSubmit={handleSubmit} className="space-y-8 w-full max-w-md">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="  text-[2.1rem] font-medium text-gray-300">Sign in</h2>
+        <h2 className="text-[2.1rem] font-medium text-gray-300">Sign in</h2>
         <p className="text-md text-gray-400">
           Stay updated on your professional world
         </p>
@@ -60,15 +62,23 @@ const LoginForm = () => {
         className={baseClass}
         required
       />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className={baseClass}
-        required
-      />
-
+      <div className="relative">
+        <input
+          type={showPassword ? "text" : "password"} // Toggle input type
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className={baseClass}
+          required
+        />
+        <button
+          type="button"
+          onClick={() => setShowPassword(!showPassword)} 
+          className="absolute right-3 top-4"
+        >
+          {showPassword ? <EyeOff className="text-gray-400" /> : <Eye className="text-gray-400" />}
+        </button>
+      </div>
       <button
         type="submit"
         className="btn btn-primary hover:bg-blue-800 text-white w-full h-[3.3rem] text-lg rounded-3xl"
@@ -78,4 +88,5 @@ const LoginForm = () => {
     </form>
   );
 };
+
 export default LoginForm;
