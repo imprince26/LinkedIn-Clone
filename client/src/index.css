@@ -8,3 +8,11 @@
      font-family: "Roboto", sans-serif;
      color:#ede5e5
 }
+::selection{
+     background-color:#479db2;
+     color : white
+}
+::-moz-selection{
+     background-color:#479db2;
+     color : white
+}
