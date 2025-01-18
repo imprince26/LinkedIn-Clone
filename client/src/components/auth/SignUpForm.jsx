@@ -90,7 +90,7 @@ const SignUpForm = () => {
           onClick={() => setShowPassword(!showPassword)} // Toggle password visibility
           className="absolute right-3 top-9"
         >
-          {showPassword ? <EyeOff className="text-gray-400" /> : <Eye className="text-gray-400" />}
+          {!showPassword ? <EyeOff className="text-gray-400" /> : <Eye className="text-gray-400" />}
         </button>
       </div>
 
