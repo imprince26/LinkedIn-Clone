@@ -11,7 +11,7 @@ import {
   Share2,
   Trash2,
 } from "lucide-react";
-import { BiLike,BiSolidLike  } from "react-icons/bi";
+import { BiLike, BiSolidLike } from "react-icons/bi";
 import { formatDistanceToNow } from "date-fns";
 
 import PostAction from "./PostAction";
@@ -86,6 +86,21 @@ const Post = ({ post }) => {
     },
   });
 
+  const { mutate: deleteComment } = useMutation({
+    mutationFn: async (commentId) => {
+      await axiosInstance.delete(`/posts/${post._id}/comment/${commentId}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      toast.success("Comment deleted successfully", {
+        style: {
+          background: "#333",
+          color: "#fff",
+        },
+      });
+    },
+  });
+
   const handleDeletePost = () => {
     if (!window.confirm("Are you sure you want to delete this post?")) return;
     deletePost();
@@ -116,46 +131,52 @@ const Post = ({ post }) => {
     }
   };
 
-  return (
-    <div className="bg-dark-primary rounded-lg shadow mb-4">
-      <div className="p-4">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center">
-            <Link to={`/profile/${post?.author?.username}`}>
-              <img
-                src={post.author.profilePicture || "/avatar.png"}
-                alt={post.author.name}
-                className="size-12 rounded-full mr-3"
-              />
-            </Link>
+  const handleDeleteComment = (commentId) => {
+    if (window.confirm("Are you sure you want to delete this comment?")) {
+      deleteComment(commentId);
+      setComments(comments.filter(comment => comment._id !== commentId));
+    }
+  };
 
-            <div>
-              <Link to={`/profile/${post?.author?.username}`}>
-                <h3 className="font-semibold text-md">{post.author.name}</h3>
-              </Link>
-              <p className="text-xs text-info">{post.author.headline}</p>
-              <p className="text-xs text-info">
-                {formatDistanceToNow(new Date(post.createdAt), {
-                  addSuffix: true,
-                })}
-              </p>
-            </div>
+  return (
+    <div className="bg-dark-primary rounded-lg shadow mb-4 p-4">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center">
+          <Link to={`/profile/${post?.author?.username}`}>
+            <img
+              src={post.author.profilePicture || "/avatar.png"}
+              alt={post.author.name}
+              className="size-12 rounded-full mr-3"
+            />
+          </Link>
+
+          <div>
+            <Link to={`/profile/${post?.author?.username}`}>
+              <h3 className="font-semibold text-md">{post.author.name}</h3>
+            </Link>
+            <p className="text-xs text-info">{post.author.headline}</p>
+            <p className="text-xs text-info">
+              {formatDistanceToNow(new Date(post.createdAt), {
+                addSuffix: true,
+              })}
+            </p>
           </div>
-          {isOwner && (
-            <button
-              onClick={handleDeletePost}
-              className="text-red-500 hover:text-red-700"
-            >
-              {isDeletingPost ? (
-                <Loader size={18} className="animate-spin" />
-              ) : (
-                <Trash2 size={18} />
-              )}
-            </button>
-          )}
         </div>
-        <p className="mb-4">{post.content}</p>
-        {post.media && post.media.url && (
+        {isOwner && (
+          <button
+            onClick={handleDeletePost}
+            className="text-red-500 hover:text-red-700"
+          >
+            {isDeletingPost ? (
+              <Loader size={18} className="animate-spin" />
+            ) : (
+              <Trash2 size={18} />
+            )}
+          </button>
+        )}
+      </div>
+      <p className="mb-4">{post.content}</p>
+      {post.media && post.media.url && (
         <img
           src={post.media.url}
           alt="Post media"
@@ -163,26 +184,25 @@ const Post = ({ post }) => {
         />
       )}
 
-        <div className="flex justify-between">
-          <PostAction
-            icon={
-              !isLiked ? (
-                <BiLike size={22} />
-              ) : (
-                <BiSolidLike size={22} className="fill-blue-500" />
-              )
-            }
-            text={`Like (${post.likes.length})`}
-            onClick={handleLikePost}
-          />
+      <div className="flex justify-between">
+        <PostAction
+          icon={
+            !isLiked ? (
+              <BiLike size={22} className="transition-transform duration-300" />
+            ) : (
+              <BiSolidLike size={22} className="fill-blue-500 transition-transform duration-300" />
+            )
+          }
+          text={`Like (${post.likes.length})`}
+          onClick={handleLikePost}
+        />
 
-          <PostAction
-            icon={<MessageCircle size={22} />}
-            text={`Comment (${comments.length})`}
-            onClick={() => setShowComments(!showComments)}
-          />
-          <PostAction icon={<Share2 size={22} />} text="Share" />
-        </div>
+        <PostAction
+          icon={<MessageCircle size={22} />}
+          text={`Comment (${comments.length})`}
+          onClick={() => setShowComments(!showComments)}
+        />
+        <PostAction icon={<Share2 size={22} />} text="Share" />
       </div>
 
       {showComments && (
@@ -208,6 +228,12 @@ const Post = ({ post }) => {
                     </span>
                   </div>
                   <p>{comment.content}</p>
+                  <button
+                    onClick={() => handleDeleteComment(comment._id)}
+                    className="text-red-500 hover:text-red-700 text-xs"
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
             ))}
@@ -239,4 +265,5 @@ const Post = ({ post }) => {
     </div>
   );
 };
+
 export default Post;
