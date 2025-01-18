@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../lib/axios";
+import { useState } from "react";
 
 import ProfileHeader from "../components/ProfileHeader";
 import AboutSection from "../components/AboutSection";
@@ -13,6 +14,7 @@ import toast from "react-hot-toast";
 const ProfilePage = () => {
   const { username } = useParams();
   const queryClient = useQueryClient();
+  const [visibleUsers, setVisibleUsers] = useState(3);
 
   const { data: authUser, isLoading } = useQuery({
     queryKey: ["authUser"],
@@ -86,10 +88,29 @@ const ProfilePage = () => {
       <div className="lg:col-span-1">
         {recommendedUsers?.length > 0 && (
           <div className="bg-dark-primary rounded-lg shadow p-4">
-            <h2 className="font-semibold text-lg mb-4">People you may know</h2>
-            {recommendedUsers?.map((user) => (
+          <h2 className="font-semibold mb-4">People you may know</h2>
+            {recommendedUsers?.slice(0, visibleUsers).map((user) => (
               <RecommendedUser key={user._id} user={user} />
             ))}
+            <div className="flex justify-between">
+
+            {visibleUsers < recommendedUsers.length && (
+              <button
+                className="mt-4 text-blue-500"
+                onClick={() => setVisibleUsers(visibleUsers + 3)} // Show 3 more users
+              >
+                See More
+              </button>
+            )}
+            {visibleUsers > 3 && (
+              <button
+                className="mt-4 text-blue-500"
+                onClick={() => setVisibleUsers(visibleUsers - 3)}
+              >
+                See less
+              </button>
+            )}
+            </div>
           </div>
         )}
       </div>

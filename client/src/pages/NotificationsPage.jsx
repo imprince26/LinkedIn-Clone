@@ -111,7 +111,7 @@ const NotificationsPage = () => {
         )}
         <div className="flex-1 overflow-hidden">
           <p className="text-sm text-wrap text-gray-300 ">
-            {relatedPost.content}
+            {relatedPost.content.slice(0,50)}
           </p>
         </div>
         <ExternalLink size={14} className="text-gray-400" />
