@@ -2,13 +2,13 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { axiosInstance } from "../../lib/axios";
 import toast from "react-hot-toast";
-import { Loader, Eye, EyeOff } from "lucide-react"; // Import eye icons
+import { Loader, Eye, EyeOff } from "lucide-react"; 
 import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // State for password visibility
+  const [showPassword, setShowPassword] = useState(false); 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -64,7 +64,7 @@ const LoginForm = () => {
       />
       <div className="relative">
         <input
-          type={showPassword ? "text" : "password"} // Toggle input type
+          type={showPassword ? "text" : "password"}
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
