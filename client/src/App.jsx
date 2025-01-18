@@ -45,7 +45,6 @@ function App() {
   const location = useLocation();
 
   useEffect(() => {
-    // If user is not authenticated and tries to access a protected route, redirect to login
     if (!authUser && location.pathname !== '/login' && location.pathname !== '/signup') {
       navigate('/login');
     }
