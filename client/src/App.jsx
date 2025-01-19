@@ -1,5 +1,11 @@
 import { Suspense, lazy, useEffect } from "react";
-import { Navigate, Route, Routes, useNavigate, useLocation } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  Routes,
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
 import Layout from "./components/layout/Layout";
 import { Toaster } from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
@@ -13,24 +19,25 @@ const NetworkPage = lazy(() => import("./pages/NetworkPage"));
 const PostPage = lazy(() => import("./pages/PostPage"));
 const ProfilePage = lazy(() => import("./pages/ProfilePage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+import LoadingSpinner from "./components/LoadingSpinner";
 
 function App() {
   const {
     data: authUser,
     isLoading,
-    refetch 
+    refetch,
   } = useQuery({
     queryKey: ["authUser"],
     queryFn: async () => {
       try {
         const res = await axiosInstance.get("/auth/me", {
-          withCredentials: true
+          withCredentials: true,
         });
-      
+
         if (res.data.isAuthenticated) {
           return res.data;
         }
-        
+
         return null;
       } catch (err) {
         console.error("Authentication Error:", err);
@@ -38,30 +45,30 @@ function App() {
       }
     },
     retry: 1,
-    staleTime: 0, 
-    refetchOnWindowFocus: true
+    staleTime: 0,
+    refetchOnWindowFocus: true,
   });
 
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    if (!authUser && location.pathname !== '/login' && location.pathname !== '/signup') {
-      navigate('/login');
+    if (
+      !authUser &&
+      location.pathname !== "/login" &&
+      location.pathname !== "/signup"
+    ) {
+      navigate("/login");
     }
   }, [authUser, navigate, location]);
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <p>Loading...</p>
-      </div>
-    );
+    return <LoadingSpinner fullScreen={true} size={64} />;
   }
 
   return (
     <Layout>
-      <Suspense fallback={<div className="flex justify-center items-center min-h-screen"><p>Loading...</p></div>}>
+      <Suspense fallback={<LoadingSpinner fullScreen={true} size={64} />}>
         <Routes>
           <Route
             path="/"
@@ -75,7 +82,7 @@ function App() {
             path="/login"
             element={
               !authUser ? (
-                <LoginPage refetchAuth={refetch} /> 
+                <LoginPage refetchAuth={refetch} />
               ) : (
                 <Navigate to={"/"} />
               )
