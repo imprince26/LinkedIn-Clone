@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../../lib/axios";
 import { Link } from "react-router-dom";
 import { Bell, Home, LogOut, User, Users } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 
@@ -12,6 +12,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const location = useLocation();
 
   const { data: notifications } = useQuery({
     queryKey: ["notifications"],
@@ -61,7 +62,7 @@ const Navbar = () => {
   }, [lastScrollY]);
 
   const mobileLinkBaseClass =
-    "w-1/4 h-full text-neutral flex flex-col justify-center  items-center opacity-80 hover:opacity-100 hover:brightness-200 relative";
+    "w-1/4 h-full text-neutral flex flex-col justify-center  items-center opacity-80 relative transition-all duration-200  ease-in-out";
 
   const linkBaseClass =
     "text-neutral flex-col items-center opacity-80 hover:opacity-100 hover:brightness-200 relative hidden md:flex";
@@ -143,26 +144,47 @@ const Navbar = () => {
       <div
         className={`${
           authUser ? " " : "hidden"
-        } md:hidden flex fixed items-center h-16 border-t border-gray-300 w-full bg-dark-primary ${
+        } md:hidden flex fixed items-center h-16 w-full bg-dark-primary ${
           isVisible ? "fixed" : "hidden"
         }  bottom-0`}
       >
-        <Link to={"/"} className={mobileLinkBaseClass}>
-          <Home size={28} />
-          <span className="text-xs">Home</span>
+        <Link
+          to={"/"}
+          className={`${mobileLinkBaseClass} ${
+            location.pathname === "/"
+              ? "border-t-2 border-gray-300 brightness-200 opacity-100"
+              : ""
+          } `}
+        >
+          <Home size={22} />
+          <span className="text-[.5rem]">Home</span>
         </Link>
-        <Link to="/network" className={mobileLinkBaseClass}>
-          <Users size={28} />
-          <span className="text-xs">My Network</span>
+        <Link
+          to="/network"
+          className={`${mobileLinkBaseClass} ${
+            location.pathname === "/network"
+              ? "border-t-2 border-gray-300 brightness-200 opacity-100"
+              : ""
+          } `}
+        >
+          <Users size={22} />
+          <span className="text-[.5rem]">My Network</span>
           {unreadConnectionRequestsCount > 0 && (
             <span className={notificationSpanClass}>
               {unreadConnectionRequestsCount}
             </span>
           )}
         </Link>
-        <Link to="/notifications" className={mobileLinkBaseClass}>
-          <Bell size={28} />
-          <span className="text-xs ">Notifications</span>
+        <Link
+          to="/notifications"
+          className={`${mobileLinkBaseClass} ${
+            location.pathname === "/notifications"
+              ? "border-t-2 border-gray-300 brightness-200 opacity-100"
+              : ""
+          } `}
+        >
+          <Bell size={22} />
+          <span className="text-[.5rem] ">Notifications</span>
           {unreadNotificationCount > 0 && (
             <span className={notificationSpanClass}>
               {unreadNotificationCount}
@@ -171,10 +193,14 @@ const Navbar = () => {
         </Link>
         <Link
           to={`/profile/${authUser?.username}`}
-          className={mobileLinkBaseClass}
+          className={`${mobileLinkBaseClass} ${
+            location.pathname === `/profile/${authUser?.username}`
+              ? "border-t-2 border-gray-300 brightness-200 opacity-100"
+              : ""
+          } `}
         >
-          <User size={28} />
-          <span className="text-xs ">Me</span>
+          <User size={22} />
+          <span className="text-[.5rem] ">Me</span>
         </Link>
       </div>
     </nav>
