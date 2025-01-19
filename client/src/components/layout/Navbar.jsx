@@ -62,8 +62,9 @@ const Navbar = () => {
 
   const mobileLinkBaseClass =
     "w-1/4 h-full text-neutral flex flex-col justify-center  items-center opacity-80 hover:opacity-100 hover:brightness-200 relative";
-  
-  const linkBaseClass = "text-neutral flex-col items-center opacity-80 hover:opacity-100 hover:brightness-200 relative hidden md:flex";
+
+  const linkBaseClass =
+    "text-neutral flex-col items-center opacity-80 hover:opacity-100 hover:brightness-200 relative hidden md:flex";
 
   const notificationSpanClass =
     "absolute -top-1 -right-1 md:right-4 bg-red-500 text-white text-xs rounded-full size-4 md:size-5 flex items-center justify-center";
@@ -83,17 +84,11 @@ const Navbar = () => {
         <div className="flex items-center md:gap-6 space-x-4">
           {authUser ? (
             <>
-              <Link
-                to={"/"}
-                className={linkBaseClass}
-              >
+              <Link to={"/"} className={linkBaseClass}>
                 <Home size={24} />
                 <span className="text-xs">Home</span>
               </Link>
-              <Link
-                to="/network"
-                className={linkBaseClass}
-              >
+              <Link to="/network" className={linkBaseClass}>
                 <Users size={24} />
                 <span className="text-xs">My Network</span>
                 {unreadConnectionRequestsCount > 0 && (
@@ -102,10 +97,7 @@ const Navbar = () => {
                   </span>
                 )}
               </Link>
-              <Link
-                to="/notifications"
-                className={linkBaseClass}
-              >
+              <Link to="/notifications" className={linkBaseClass}>
                 <Bell size={24} />
                 <span className="text-xs">Notifications</span>
                 {unreadNotificationCount > 0 && (
@@ -149,7 +141,9 @@ const Navbar = () => {
       </div>
 
       <div
-        className={`md:hidden flex fixed items-center h-16 border-t border-gray-300 w-full bg-dark-primary ${
+        className={`${
+          authUser ? " " : "hidden"
+        } md:hidden flex fixed items-center h-16 border-t border-gray-300 w-full bg-dark-primary ${
           isVisible ? "fixed" : "hidden"
         }  bottom-0`}
       >
