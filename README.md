@@ -6,12 +6,15 @@
 ![MongoDB](https://img.shields.io/badge/MongoDB-4.4.0-orange)
 ![Mongoose](https://img.shields.io/badge/Mongoose-6.0.0-lightgrey)
 ![Cloudinary](https://img.shields.io/badge/Cloudinary-2.0.0-blueviolet)
-![Mailtrap](https://img.shields.io/badge/Mailtrap-3.4.0-orange)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-3.4.16-blue)
 ![DaisyUI](https://img.shields.io/badge/DaisyUI-4.12.20-lightblue)
 ![Vite](https://img.shields.io/badge/Vite-2.6.14-red)
 
 ## [View Site](https://linked-in-clone-liart.vercel.app/)
+
+### Login With
+- username : `vikas123`
+- password : `vikaspatel123`
 
 ## Overview
 
@@ -43,13 +46,6 @@ LinkedIn Clone is a web application that mimics the core functionalities of Link
   - Cloudinary (for image uploads)
   - JWT
   - Bcryptjs
-
-## 🖼️ Screenshots
-  ![Home Page](image-1.png)
-  ![alt text](image-2.png)
-  ![alt text](image-3.png)
-  ![alt text](image-4.png)
-  ![alt text](image-5.png)
 
 ## Acknowledgments
 
