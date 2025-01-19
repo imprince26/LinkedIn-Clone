@@ -150,7 +150,7 @@ const PostCreation = ({ user }) => {
           onClick={handlePostCreation}
           disabled={isPending}
         >
-          {isPending ? <Loader className="size-5 animate-spin" /> : "Share"}
+          {isPending ? <Loader className="size-5 animate-spin" /> : "Post"}
         </button>
       </div>
     </div>

@@ -11,6 +11,8 @@
 ![DaisyUI](https://img.shields.io/badge/DaisyUI-4.12.20-lightblue)
 ![Vite](https://img.shields.io/badge/Vite-2.6.14-red)
 
+## [View Site](https://linked-in-clone-liart.vercel.app/)
+
 ## Overview
 
 LinkedIn Clone is a web application that mimics the core functionalities of LinkedIn, allowing users to connect, create posts, and manage their professional profiles. Built with React for the frontend and Node.js with Express for the backend, this project showcases modern web development practices.
@@ -31,6 +33,7 @@ LinkedIn Clone is a web application that mimics the core functionalities of Link
   - Vite
   - Tailwind CSS
   - DaisyUI
+  - React-Query
 
 - **Backend:**
   - Node.js
@@ -38,19 +41,16 @@ LinkedIn Clone is a web application that mimics the core functionalities of Link
   - MongoDB
   - Mongoose
   - Cloudinary (for image uploads)
-  - Mailtrap (for email notifications)
+  - JWT
+  - Bcryptjs
 
-## Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature-branch`).
-3. Make your changes and commit them (`git commit -m 'Add new feature'`).
-4. Push to the branch (`git push origin feature-branch`).
-5. Open a pull request.
+## 🖼️ Screenshots
+  ![Home Page](image-1.png)
+  ![alt text](image-2.png)
+  ![alt text](image-3.png)
+  ![alt text](image-4.png)
+  ![alt text](image-5.png)
 
 ## Acknowledgments
 
 - Inspired by LinkedIn
-- Thanks to the open-source community for their contributions and support.
