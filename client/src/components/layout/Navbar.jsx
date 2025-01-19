@@ -47,22 +47,29 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-        if(window.scrollY > lastScrollY) {
-          setIsVisible(false);
-        }
-         else {
-          setIsVisible(true);
-        }
-        setLastScrollY(window.scrollY);
+      if (window.scrollY > lastScrollY) {
+        setIsVisible(false);
+      } else {
+        setIsVisible(true);
+      }
+      setLastScrollY(window.scrollY);
     };
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  },[lastScrollY])
+  }, [lastScrollY]);
+
+  const mobileLinkBaseClass =
+    "w-1/4 h-full text-neutral flex flex-col justify-center  items-center opacity-80 hover:opacity-100 hover:brightness-200 relative";
+  
+  const linkBaseClass = "text-neutral flex-col items-center opacity-80 hover:opacity-100 hover:brightness-200 relative hidden md:flex";
+
+  const notificationSpanClass =
+    "absolute -top-1 -right-1 md:right-4 bg-red-500 text-white text-xs rounded-full size-4 md:size-5 flex items-center justify-center";
 
   return (
-    <nav className="h-[8vh] bg-dark-primary shadow-md sticky top-0 z-10">
+    <nav className="h-16 bg-dark-primary shadow-md sticky top-0 z-10">
       <div className="h-full max-w-7xl flex justify-between items-center mx-auto px-4">
         <div className="flex items-center space-x-4">
           <Link to="/">
@@ -78,44 +85,38 @@ const Navbar = () => {
             <>
               <Link
                 to={"/"}
-                className="text-neutral flex-col items-center opacity-80 hover:opacity-100 hover:brightness-200 relative md:block hidden"
+                className={linkBaseClass}
               >
                 <Home size={24} />
                 <span className="text-xs">Home</span>
               </Link>
               <Link
                 to="/network"
-                className="text-neutral  flex-col items-center  opacity-80 hover:opacity-100 hover:brightness-200 relative md:block hidden"
+                className={linkBaseClass}
               >
                 <Users size={24} />
                 <span className="text-xs">My Network</span>
                 {unreadConnectionRequestsCount > 0 && (
-                  <span
-                    className="absolute -top-1 -right-1 md:right-4 bg-red-500 text-white text-xs 
-										rounded-full size-4 md:size-5 flex items-center justify-center"
-                  >
+                  <span className={notificationSpanClass}>
                     {unreadConnectionRequestsCount}
                   </span>
                 )}
               </Link>
               <Link
                 to="/notifications"
-                className="text-neutral  flex-col items-center  opacity-80 hover:opacity-100 hover:brightness-200 relative md:block hidden"
+                className={linkBaseClass}
               >
                 <Bell size={24} />
                 <span className="text-xs">Notifications</span>
                 {unreadNotificationCount > 0 && (
-                  <span
-                    className="absolute -top-1 -right-1 md:right-4 bg-red-500 text-white text-xs 
-										rounded-full size-4 md:size-5 flex items-center justify-center"
-                  >
+                  <span className={notificationSpanClass}>
                     {unreadNotificationCount}
                   </span>
                 )}
               </Link>
               <Link
                 to={`/profile/${authUser.username}`}
-                className="text-neutral  flex-col items-center  opacity-80 hover:opacity-100 hover:brightness-200 relative md:block hidden"
+                className={linkBaseClass}
               >
                 <User size={24} />
                 <span className="text-xs">Me</span>
@@ -147,47 +148,36 @@ const Navbar = () => {
         </div>
       </div>
 
-      <div className={` md:hidden flex fixed items-center  h-16 border-t border-gray-300 w-full bg-dark-primary ${isVisible ? "fixed" : "hidden"}  bottom-0`}>
-        <Link
-          to={"/"}
-          className="w-1/4 h-full text-neutral flex flex-col justify-center  items-center opacity-80 hover:opacity-100 hover:brightness-200 relative "
-        >
+      <div
+        className={`md:hidden flex fixed items-center h-16 border-t border-gray-300 w-full bg-dark-primary ${
+          isVisible ? "fixed" : "hidden"
+        }  bottom-0`}
+      >
+        <Link to={"/"} className={mobileLinkBaseClass}>
           <Home size={28} />
           <span className="text-xs">Home</span>
         </Link>
-        <Link
-          to="/network"
-          className="w-1/4 h-full text-neutral flex flex-col justify-center  items-center  opacity-80 hover:opacity-100 hover:brightness-200 relative"
-        >
+        <Link to="/network" className={mobileLinkBaseClass}>
           <Users size={28} />
           <span className="text-xs">My Network</span>
           {unreadConnectionRequestsCount > 0 && (
-            <span
-              className="absolute -top-1 -right-1 md:right-4 bg-red-500 text-white text-xs 
-										rounded-full size-4 md:size-5 flex items-center justify-center"
-            >
+            <span className={notificationSpanClass}>
               {unreadConnectionRequestsCount}
             </span>
           )}
         </Link>
-        <Link
-          to="/notifications"
-          className="w-1/4 h-full text-neutral flex flex-col justify-center  items-center  opacity-80 hover:opacity-100 hover:brightness-200 relative"
-        >
+        <Link to="/notifications" className={mobileLinkBaseClass}>
           <Bell size={28} />
           <span className="text-xs ">Notifications</span>
           {unreadNotificationCount > 0 && (
-            <span
-              className="absolute -top-1 -right-1 md:right-4 bg-red-500 text-white text-xs 
-										rounded-full size-4 md:size-5 flex items-center justify-center"
-            >
+            <span className={notificationSpanClass}>
               {unreadNotificationCount}
             </span>
           )}
         </Link>
         <Link
-          to={`/profile/${authUser.username}`}
-          className="w-1/4 h-full text-neutral flex flex-col justify-center  items-center  opacity-80 hover:opacity-100 hover:brightness-200 relative"
+          to={`/profile/${authUser?.username}`}
+          className={mobileLinkBaseClass}
         >
           <User size={28} />
           <span className="text-xs ">Me</span>

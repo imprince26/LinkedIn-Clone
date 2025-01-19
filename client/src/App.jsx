@@ -34,7 +34,7 @@ function App() {
           withCredentials: true,
         });
 
-        if (res.data.isAuthenticated) {
+        if (res.data && res.data.isAuthenticated) {
           return res.data;
         }
 
