@@ -3,7 +3,7 @@ const Layout = ({ children }) => {
 	return (
 		<div className='min-h-screen bg-neutral'>
 			<Navbar />
-			<main className='max-w-7xl mx-auto px-4 py-6'>{children}</main>
+			<main className='md:max-w-7xl w-[100vw] md:mx-auto md:px-4 md:py-6'>{children}</main>
 		</div>
 	);
 };

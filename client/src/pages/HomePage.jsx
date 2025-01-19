@@ -34,7 +34,7 @@ const HomePage = () => {
         <Sidebar user={authUser} />
       </div>
 
-      <div className="col-span-1 lg:col-span-2 order-first lg:order-none">
+      <div className="col-span-1 lg:col-span-2  order-first lg:order-none">
         <PostCreation user={authUser} />
 
         {posts?.map((post) => (
