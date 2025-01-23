@@ -12,10 +12,6 @@
 
 ## [View Site](https://linked-in-clone-liart.vercel.app/)
 
-### Login With
-- username : `vikas123`
-- password : `vikaspatel123`
-
 ## Overview
 
 LinkedIn Clone is a web application that mimics the core functionalities of LinkedIn, allowing users to connect, create posts, and manage their professional profiles. Built with React for the frontend and Node.js with Express for the backend, this project showcases modern web development practices.
