@@ -62,9 +62,9 @@ function App() {
     }
   }, [authUser, navigate, location]);
 
-  if (isLoading) {
-    return <LoadingSpinner fullScreen={true} size={64} />;
-  }
+  // if (isLoading) {
+  //   return <LoadingSpinner fullScreen={true} size={64} />;
+  // }
 
   return (
     <Layout>
