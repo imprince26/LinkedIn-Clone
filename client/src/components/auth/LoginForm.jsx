@@ -39,6 +39,16 @@ const LoginForm = () => {
   });
 
   const handleSubmit = (e) => {
+    if (isLoading) return; 
+    if (!username || !password) {
+      toast.error("All fields are required", {
+        style: {
+          background: "#333",
+          color: "#fff",
+        }
+      });
+      return;
+    }
     e.preventDefault();
     loginMutation({ username, password });
   };
@@ -61,6 +71,7 @@ const LoginForm = () => {
         onChange={(e) => setUsername(e.target.value)}
         className={baseClass}
         required
+        disabled={isLoading}
       />
       <div className="relative">
         <input
@@ -70,20 +81,27 @@ const LoginForm = () => {
           onChange={(e) => setPassword(e.target.value)}
           className={baseClass}
           required
+          disabled={isLoading}
         />
         <button
           type="button"
           onClick={() => setShowPassword(!showPassword)} 
           className="absolute right-3 top-4"
+          disabled={isLoading}
         >
           {!showPassword ? <EyeOff className="text-gray-400" /> : <Eye className="text-gray-400" />}
         </button>
       </div>
       <button
         type="submit"
-        className="btn btn-primary hover:bg-blue-800 text-white w-full h-[3.3rem] text-lg rounded-3xl"
+        className="btn btn-primary hover:bg-blue-800 text-white w-full h-[3.3rem] text-lg rounded-3xl disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center"
+        disabled={isLoading}
       >
-        {isLoading ? <Loader className="size-5 animate-spin" /> : "Sign in"}
+        {isLoading ? (
+          <Loader className="size-5 animate-spin" />
+        ) : (
+          "Sign in"
+        )}
       </button>
     </form>
   );
