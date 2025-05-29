@@ -2,13 +2,13 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { axiosInstance } from "../../lib/axios";
 import toast from "react-hot-toast";
-import { Loader, Eye, EyeOff } from "lucide-react"; 
+import { Loader, Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); 
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -18,7 +18,7 @@ const LoginForm = () => {
     }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["authUser"] });
-      
+
       toast.success("Logged in successfully", {
         style: {
           background: "#333",
@@ -39,7 +39,7 @@ const LoginForm = () => {
   });
 
   const handleSubmit = (e) => {
-    if (isLoading) return; 
+    if (isLoading) return;
     if (!username || !password) {
       toast.error("All fields are required", {
         style: {
@@ -85,7 +85,7 @@ const LoginForm = () => {
         />
         <button
           type="button"
-          onClick={() => setShowPassword(!showPassword)} 
+          onClick={() => setShowPassword(!showPassword)}
           className="absolute right-3 top-4"
           disabled={isLoading}
         >
