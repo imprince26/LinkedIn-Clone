@@ -68,7 +68,7 @@ const Navbar = () => {
     "text-neutral flex-col items-center opacity-80 hover:opacity-100 hover:brightness-200 relative hidden md:flex";
 
   const notificationSpanClass =
-    "absolute -top-1 -right-1 md:right-4 bg-red-500 text-white text-xs rounded-full size-4 md:size-5 flex items-center justify-center";
+    "absolute left-1/2 top-2 md:right-4 md:-top-1 bg-red-500 text-white text-xs rounded-full size-4 md:size-5 flex items-center justify-center";
 
   return (
     <nav className="h-16 bg-dark-primary shadow-md sticky top-0 z-10">
