@@ -68,7 +68,7 @@ function App() {
 
   return (
     <Layout>
-      <Suspense fallback={<LoadingSpinner fullScreen={true} size={64} />}>
+      {/* <Suspense fallback={<LoadingSpinner fullScreen={true} size={64} />}> */}
         <Routes>
           <Route
             path="/"
@@ -108,7 +108,7 @@ function App() {
           />
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </Suspense>
+      {/* </Suspense> */}
       <Toaster />
     </Layout>
   );
