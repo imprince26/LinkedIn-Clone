@@ -15,6 +15,7 @@ import { BiLike, BiSolidLike } from "react-icons/bi";
 import { formatDistanceToNow } from "date-fns";
 
 import PostAction from "./PostAction";
+import ShareModal from "./ShareModal";
 
 const Post = ({ post }) => {
   const { postId } = useParams();
@@ -22,6 +23,7 @@ const Post = ({ post }) => {
   const { data: authUser } = useQuery({ queryKey: ["authUser"] });
   const [showComments, setShowComments] = useState(false);
   const [newComment, setNewComment] = useState("");
+  const [showShareModal, setShowShareModal] = useState(false);
   const [comments, setComments] = useState(post.comments || []);
   const isOwner = authUser._id === post.author._id;
   const isLiked = post.likes.includes(authUser._id);
@@ -202,7 +204,22 @@ const Post = ({ post }) => {
           text={`Comment (${comments.length})`}
           onClick={() => setShowComments(!showComments)}
         />
-        <PostAction icon={<Share2 size={22} />} text="Share" />
+        <PostAction 
+  icon={
+    <Share2 
+      size={22} 
+      className={`transition-transform duration-300 ${showShareModal ? 'text-blue-500' : ''}`} 
+    />
+  } 
+  text="Share" 
+  onClick={() => setShowShareModal(true)}
+/>
+
+<ShareModal 
+  isOpen={showShareModal}
+  onClose={() => setShowShareModal(false)}
+  postId={post._id}
+/>
       </div>
 
       {showComments && (
