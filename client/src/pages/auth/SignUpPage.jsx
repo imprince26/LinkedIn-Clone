@@ -4,7 +4,7 @@ import SignUpForm from "../../components/auth/SignUpForm.jsx";
 const SignUpPage = () => {
   return (
     <div className="min-h-[80vh] sm:px-6">
-      <h2 className="text-center lg:text-[2rem] text-xl font-normal text-gray-300">
+      <h2 className="text-center lg:text-[2rem] mt-6 text-xl font-normal text-gray-300">
         Make the most of your professional life
       </h2>
       <div className="mt-8  mx-auto max-w-md  bg-dark-primary py-8 px-4 shadow-md shadow-gray-900 rounded-lg sm:px-10">
@@ -17,7 +17,7 @@ const SignUpPage = () => {
             </div>
             <div className="relative flex justify-center text-sm">
               <span className="px-2 bg-dark-primary text-gray-300">
-                Already on LinkedIn?
+                Already on Jobbly?
               </span>
             </div>
           </div>

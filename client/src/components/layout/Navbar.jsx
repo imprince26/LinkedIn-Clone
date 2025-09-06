@@ -75,11 +75,12 @@ const Navbar = () => {
       <div className="h-full max-w-7xl flex justify-between items-center mx-auto px-4">
         <div className="flex items-center space-x-4">
           <Link to="/">
-            <img
+            {/* <img
               className="lg:h-8 h-6 rounded"
               src="/dark-logo.svg"
               alt="LinkedIn"
-            />
+            /> */}
+            <div className=" font-bold text-xl sm:text-3xl ">Jobbly</div>
           </Link>
         </div>
         <div className="flex items-center md:gap-6 space-x-4">

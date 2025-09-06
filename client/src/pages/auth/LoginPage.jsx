@@ -12,7 +12,7 @@ const LoginPage = () => {
           </div>
           <div className="relative flex justify-center text-md">
             <span className="px-2 bg-dark-primary  text-gray-300">
-              New to LinkedIn?
+              New to Jobbly?
             </span>
           </div>
         </div>
